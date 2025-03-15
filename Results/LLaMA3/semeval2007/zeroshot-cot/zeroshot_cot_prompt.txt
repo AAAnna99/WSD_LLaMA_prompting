@@ -1,0 +1,35 @@
+max_length=2048 token	
+----------------------
+
+ for i, (sense_key, sense_data) in enumerate(senses.items(), 0):
+        possible_meanings += (
+            f"sense_number {i}: Definition: {sense_data['definition']}\n"
+            # f"Synonyms: {sense_data['synonym']}\n"
+            f"Frequency: {sense_data['frequency']}\n"
+            f"Example: {sense_data['example']}\n\n"
+        )
+
+    system_prompt =  f"""You are a linguistic expert in word sense disambiguation (WSD).
+    \nYour task is to identify the correct sense for the target word based on the context.
+    """
+    user_prompt = f"""Context: '{context}'.
+    \nTarget word: '{target_word}'.
+    \nPossible senses list for '{target_word}':
+    '{possible_meanings}' 
+    \nReturn JSON object that contains the finalized sense_number. Use the following format for the output.
+    <JSON Object with ambiguity word and the sense_number>
+    
+    \nLet's think step by step.
+    """  
+
+def predict_meaning(pipeline, prompt):
+    outputs = pipeline(
+        prompt,
+        max_new_tokens=1024,
+        temperature = 0.6,
+        top_p = 0.8,
+        top_k = 30
+    )
+
+    response = outputs[0]["generated_text"][-1]
+    return response

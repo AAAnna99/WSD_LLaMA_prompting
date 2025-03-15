@@ -1,0 +1,41 @@
+max_length=1024 token
+----------------------
+
+
+    possible_meanings = ""
+    examples = ""
+
+    for (sense_key, sense_data) in senses.items():
+        possible_meanings += (
+            f"sense_number: {sense_data['Id']} "
+            f"\nWord:  {sense_data['Word']}"
+            f"\nGloss: {sense_data['Gloss']}"
+            f"\nFrequency: {sense_data['Frequency']}\n\n"
+        )
+
+        examples += (
+            f"sense_number: {sense_data['Id']} "
+            f"\nExample: {sense_data['Example']}\n\n"
+        )
+
+
+system_prompt =  f"""
+    You are a linguistic expert in word sense disambiguation (WSD). 
+    Your task is to identify the correct sense_number for the target word based on the context.
+    """
+    # You are going to identify the corresponding sense_number of an ambiguous word in English sentences.
+    #\nAlways respond in the following format: Correct Sense Number: <number>
+
+    user_prompt = f"""
+    Do the following tasks.
+    \n1. word has different meanings. Below are possible meanings. Comprehend the meanings. 
+    '{possible_meanings}'
+    \n2. You can learn more on the usage of each word and the meaning through below Examples. Examples are: '{examples}.
+    \n3. Analyze the sentence below using the following techniques and identify the most suitable meaning of the ambiguous word.
+    '{context}'
+    \n-Focus on keywords in the sentence surrounding the ambiguous word.
+    \n-Think about the overall topic and intent of the sentence. 
+    \n4. Choose the sense_number that makes the most logical sense within the context. '{possible_meanings}'
+    \n5. Return JSON object that contains the ambiguity word and the finalized sense_number. Use the following format for the output.
+    <JSON Object with ambiguity word and the sense_number>
+    """

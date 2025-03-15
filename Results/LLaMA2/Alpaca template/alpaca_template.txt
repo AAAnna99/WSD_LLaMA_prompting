@@ -1,0 +1,41 @@
+prompt = f"""    
+    ### Instruction:
+    You are a linguistic expert in word sense disambiguation (WSD). 
+    Your task is to identify the correct sense_number for an ambiguous word based on the context and the provided list of possible meanings. 
+    Always respond in the following format:
+    "Sense Number: <sense_number>"
+
+    If you are unsure, always choose the closest matching sense from the list.
+
+    ### Input:
+    Context: '{context}'.
+    Target word: '{target_word}'.
+    Possible senses list for '{target_word}'
+    {possible_meanings}
+    
+    ### Response:
+    
+    """
+
+def predict_meaning(model, tokenizer, prompt):
+
+    input = tokenizer(
+              prompt,
+              return_tensors="pt"
+            ).to("cuda")
+
+    pad_token_id = tokenizer.pad_token_id or tokenizer.eos_token_id
+    start_index = input.input_ids.shape[-1]
+
+    with torch.no_grad():
+        output = model.generate(
+                input.input_ids,
+                max_new_tokens = 512,
+                repetition_penalty=1.2,
+                pad_token_id = pad_token_id
+                )
+
+    generation_output = output[0][start_index:]    
+    response = tokenizer.decode(generation_output, skip_special_tokens=True)
+
+    return response

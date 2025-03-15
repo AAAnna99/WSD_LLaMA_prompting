@@ -1,0 +1,48 @@
+prompt = f"""<s>[INST] <<SYS>>
+    You are a linguistic expert in word sense disambiguation (WSD).\n
+    Your task is to identify the correct sense for an ambiguous word based on the context and the provided list of possible senses.\n
+    <</SYS>>
+
+    Below are the possible senses for the ambiguous word. Each sense includes:\n
+    - A brief description of the sense.\n
+    - The number of times this sense of the target word appears in a large corpus of texts. 
+    Higher frequency suggests the sense is more commonly used, while lower frequency indicates a rarer or specialized use of the word.\n
+    - An example of sentence illustrating the use of the sense.\n
+
+    This is the context: '{context}'\n
+    This is the ambiguous word: '{target_word}'\n
+    Possible senses for '{target_word}' are:\n
+    {possible_meanings}    
+    \nChoose the most appropriate sense_number listed above.
+
+    Always respond in the following format:\n
+    "Sense Number: <sense_number>"\n
+    [/INST]
+    """
+
+
+def predict_meaning(model, tokenizer, prompt):
+
+    input = tokenizer(
+              prompt,
+              return_tensors="pt"
+            ).to("cuda")
+
+    pad_token_id = tokenizer.pad_token_id or tokenizer.eos_token_id
+    start_index = input.input_ids.shape[-1]
+
+    with torch.no_grad():
+        output = model.generate(
+                input.input_ids,
+                max_new_tokens = 512,
+                repetition_penalty=1.2,
+                pad_token_id = pad_token_id
+                )
+
+    generation_output = output[0][start_index:]
+
+    # response = tokenizer.decode(output[0], skip_special_tokens=True)
+    
+    
+    response = tokenizer.decode(generation_output, skip_special_tokens=True)
+    return response
