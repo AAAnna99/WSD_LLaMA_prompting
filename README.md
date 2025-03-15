@@ -55,7 +55,8 @@ Example of usage:
 
 
 
-REFERENCE PAPER
+REFERENCE PAPER:
+
 Alessandro Raganato, José Camacho-Collados and Roberto Navigli. 
 Word Sense Disambiguation: A Unified Evaluation Framework and Empirical Comparison
 In Proceedings of European Chapter of the Association for Computational Linguistics (EACL), 
