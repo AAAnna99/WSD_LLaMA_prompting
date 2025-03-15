@@ -1,6 +1,4 @@
-======================================================================================
-	TECNICHE DI PROMPTING DI LARGE LANGUAGE MODEL PER IL WORD SENSE DISAMBIGUATION
-======================================================================================
+TECNICHE DI PROMPTING DI LARGE LANGUAGE MODEL PER IL WORD SENSE DISAMBIGUATION
 
 This package contains datasets, scripts, and results from my Master's Thesis in Computer Science from the University of Bologna.
 
@@ -56,7 +54,7 @@ Example of usage:
 `$ java Scorer semeval2013/semeval2013.gold.key.txt semeval2013/output.key`
 
 
-=======================================================================================================================
+
 REFERENCE PAPER
 Alessandro Raganato, José Camacho-Collados and Roberto Navigli. 
 Word Sense Disambiguation: A Unified Evaluation Framework and Empirical Comparison
